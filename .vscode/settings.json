@@ -1,0 +1,9 @@
+{
+  "idf.customExtraVars": {
+    "IDF_PATH": "C:\\Espressif\\frameworks\\esp-idf-v6.0.2",
+    "IDF_TOOLS_PATH": "C:\\Espressif\\tools",
+    "IDF_PYTHON_ENV_PATH": "C:\\Espressif\\tools\\python_env\\idf6.0_py3.12_env"
+  },
+  "idf.gitPathWin": "C:\\Program Files\\Git\\cmd\\git.exe",
+  "idf.enableCCache": true
+}

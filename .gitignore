@@ -1,0 +1,15 @@
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+dependencies.lock
+*.bin
+*.elf
+*.map
+*.key
+*.pem
+*.der
+*.crt
+*.p12
+evidence/private/
+.verification/
