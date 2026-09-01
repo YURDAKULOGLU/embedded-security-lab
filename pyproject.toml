@@ -1,0 +1,9 @@
+[project]
+name = "embedded-security-lab"
+version = "0.1.0"
+description = "Hands-on embedded security lifecycle learning and proof-of-work lab"
+requires-python = ">=3.10"
+dependencies = ["cryptography>=42.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
