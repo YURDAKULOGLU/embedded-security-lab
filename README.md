@@ -2,6 +2,8 @@
 
 Bu depo, Cyber Quanta stajına hazırlanırken gömülü sistemler ve cihaz güvenliğini deneylerle öğrenmek için oluşturulmuş kişisel laboratuvardır. Amaç komutları ezberlemek değil; bir sistemin davranışını önceden tahmin etmek, ölçmek, bilinçli olarak bozmak ve sonucu teknik olarak açıklayabilmektir.
 
+> Bu, kişisel bir eğitim ve deney deposudur; Cyber Quanta'nın resmî yazılımı veya resmî dokümantasyonu değildir.
+
 ## İçindekiler
 
 - [Öğrenme sözleşmesi](#öğrenme-sözleşmesi)
@@ -25,6 +27,8 @@ Bu depoda asistan doğrudan çözüm üretmez. Her deney şu kurallarla yürüt�
 5. Tam çözüm ancak deneme ve gerekçelendirme sonrasında gösterilir.
 6. Her laboratuvar ölçülebilir kanıtla kapanır.
 7. Konu 48 saat veya daha sonra kısa bir tekrar göreviyle yeniden sınanır.
+8. Yeni bir teknik terim ilk kullanımında Türkçe karşılığı, görevi, bulunduğu yer ve ilişkili olduğu parçalarla birlikte açıklanır.
+9. Açıklanmamış bir terim üzerine deney kurulmaz; öğrenci terimi kendi cümlesiyle ifade edebildikten sonra devam edilir.
 
 Bir komutun çalışması öğrenme kanıtı değildir. Komutun neyi değiştirdiğini ve neden o sonucu ürettiğini açıklamak gerekir.
 
@@ -141,6 +145,7 @@ cyber-quanta-embedded-security-lab/
 ├── docs/                 # Yol haritası, ustalık ve güvenlik kuralları
 ├── evidence/             # Seri logları, hash'ler ve deney kanıtları
 ├── labs/                 # Sıralı deneyler ve öğrenci raporları
+├── notes/                # Konulara göre düzenlenmiş teori notları
 ├── scripts/              # Güvenli ortam ve doğrulama yardımcıları
 ├── .gitignore            # Anahtar ve derleme ürünlerini dışarıda tutar
 └── README.md             # Laboratuvarın giriş noktası
