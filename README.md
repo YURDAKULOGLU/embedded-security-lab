@@ -1,179 +1,135 @@
-# Cyber Quanta Embedded Security Lab
+# Embedded Security Lab — ESP32 Hardware + Secure Lifecycle Proof-of-Work
 
-Bu depo, Cyber Quanta stajına hazırlanırken gömülü sistemler ve cihaz güvenliğini deneylerle öğrenmek için oluşturulmuş kişisel laboratuvardır. Amaç komutları ezberlemek değil; bir sistemin davranışını önceden tahmin etmek, ölçmek, bilinçli olarak bozmak ve sonucu teknik olarak açıklayabilmektir.
+Bu depo gömülü sistem güvenliğini **tahmin → deney → bozma → teşhis → açıklama → evidence** döngüsüyle öğrenmek için oluşturulmuş kişisel laboratuvardır. İlk ESP32 laboratuvarları ile Secure Boot pratiğini; yeni host-side lifecycle modeli ile trust anchor, revocation, anti-rollback, A/B recovery ve traceability konularını tek çalışma alanında birleştirir.
 
-> Bu, kişisel bir eğitim ve deney deposudur; Cyber Quanta'nın resmî yazılımı veya resmî dokümantasyonu değildir.
+> Bu kişisel bir eğitim/proof-of-work deposudur; Cyber Quanta'nın, NXP'nin, Silicon Labs'ın veya Espressif'in resmî yazılımı/dokümantasyonu değildir.
 
-## İçindekiler
+## Kanıt sınırı
 
-- [Öğrenme sözleşmesi](#öğrenme-sözleşmesi)
-- [Laboratuvar yöntemi](#laboratuvar-yöntemi)
-- [Kurulu teknoloji yığını](#kurulu-teknoloji-yığını)
-- [Başlangıç](#başlangıç)
-- [Laboratuvar sırası](#laboratuvar-sırası)
-- [Başarı ölçütleri](#başarı-ölçütleri)
-- [Güvenlik kuralları](#güvenlik-kuralları)
-- [Dizin yapısı](#dizin-yapısı)
-- [Sorun giderme](#sorun-giderme)
+Bu repoda üç farklı iddia seviyesi birbirine karıştırılmaz:
 
-## Öğrenme sözleşmesi
+- `HOST_VERIFIED` — çalıştırılabilir host modeli/testi geçti.
+- `SOURCE_REVIEWED` — mimari veya kaynak incelendi; gerçek kart kanıtı değildir.
+- `HARDWARE_PENDING` — ilgili fiziksel hedef henüz test edilmedi.
+- `HARDWARE_VERIFIED` — gerçek cihazdan tekrarlanabilir evidence toplandı.
 
-Bu depoda asistan doğrudan çözüm üretmez. Her deney şu kurallarla yürütülür:
+Gerçek donanım ana yolu **ESP32**'dir. i.MX93/AHAB ve EFR32 çalışmaları mimari/source-review track'idir; ilgili kart olmadan hardware proof iddiası yapılmaz.
 
-1. Öğrenci deneyden önce tahminini yazar.
-2. Öğrenci ilk uygulamayı kendisi yapar.
-3. Bir hata oluştuğunda öğrenci önce gözlemini ve olası nedenini kaydeder.
-4. Yardım gerektiğinde ipuçları küçükten büyüğe verilir.
-5. Tam çözüm ancak deneme ve gerekçelendirme sonrasında gösterilir.
-6. Her laboratuvar ölçülebilir kanıtla kapanır.
-7. Konu 48 saat veya daha sonra kısa bir tekrar göreviyle yeniden sınanır.
-8. Yeni bir teknik terim ilk kullanımında Türkçe karşılığı, görevi, bulunduğu yer ve ilişkili olduğu parçalarla birlikte açıklanır.
-9. Açıklanmamış bir terim üzerine deney kurulmaz; öğrenci terimi kendi cümlesiyle ifade edebildikten sonra devam edilir.
-
-Bir komutun çalışması öğrenme kanıtı değildir. Komutun neyi değiştirdiğini ve neden o sonucu ürettiğini açıklamak gerekir.
-
-## Laboratuvar yöntemi
-
-Her laboratuvar aşağıdaki döngüyü kullanır:
+## Öğrenme yöntemi
 
 ```text
-Problem → Tahmin → Deney → Gözlem → Bozma → Teşhis → Açıklama → Tekrar
+Problem
+  ↓
+Tahmin
+  ↓
+Deney
+  ↓
+Gözlem
+  ↓
+Kasıtlı negatif test
+  ↓
+Teşhis
+  ↓
+Kendi cümlenle açıklama
+  ↓
+Evidence artifact
 ```
 
-Her deney raporunda şu alanlar bulunur:
+Bir komutun çalışması tek başına öğrenme kanıtı değildir. Şunları açıklayabilmek gerekir: mekanizma hangi problemi çözüyor, neyi çözmüyor, güven nerede başlıyor, hangi negatif test enforcement'ı kanıtlar ve başka bir mühendise hangi artifact gösterilir?
 
-- Araştırma sorusu
-- Deney öncesi tahmin
-- Kullanılan donanım ve yazılım sürümleri
-- Uygulanan işlem
-- Ham çıktı veya ekran görüntüsü
-- Beklenen ve gerçekleşen sonuç arasındaki fark
-- Teknik açıklama
-- Yeni soru
+## Şu anda kapsanan alanlar
 
-## Kurulu teknoloji yığını
+- ESP-IDF ortamı, çip keşfi ve ESP32 boot chain
+- Hash, integrity, public/private key ve firmware signing
+- Secure Boot emülasyonu ve gerçek donanım güvenlik kapısı
+- Root of Trust, Trust Anchor, Chain of Trust
+- Çoklu trusted-key modeli, key rotation ve revocation
+- AHAB-style authenticated-container karar modeli (vendor binary parser değildir)
+- Lifecycle / open-vs-closed enforcement mantığı
+- Signed A/B update, recovery rollback ve anti-rollback
+- Manifest, metadata, artifact ve evidence
+- Requirement → mechanism → test → acceptance criterion → evidence traceability
+- ESP32 gerçek hardware proof-of-work akışı
+- i.MX93/AHAB ve EFR32 architecture study track'leri
 
-- Windows geliştirme ortamı
-- ESP-IDF 6.0.2
-- Xtensa ve RISC-V ESP derleyicileri
-- CMake ve Ninja
-- OpenOCD ve GDB
-- esptool ve espefuse
-- VS Code ESP-IDF eklentisi
-- Docker Desktop
-- QEMU Xtensa ve RISC-V: resmî ESP-IDF Docker ortamında doğrulandı
+## Hızlı başlangıç
 
-ESP-IDF kaynakları `C:\Espressif\frameworks\esp-idf-v6.0.2`, araçlar ise `C:\Espressif\tools` altında tutulur.
+### ESP32 tarafı
 
-## Başlangıç
+Önce [`ESP32_FIRST.md`](ESP32_FIRST.md) dosyasını oku. Mevcut eski lab akışı:
 
-### 1. ESP-IDF terminalini aç
+| No | Lab | Hedef |
+|---:|---|---|
+| 00 | `labs/00-environment` | Araç zinciri / reproducibility |
+| 01 | `labs/01-chip-discovery` | Çip, revision, ROM/serial evidence |
+| 02 | `labs/02-boot-chain` | ROM → bootloader → partition → app |
+| 03 | `labs/03-firmware-signing` | Hash, key pair, signature |
+| 04 | `labs/04-secure-boot-emulation` | Signed/tampered image davranışı |
+| 05 | `labs/05-secure-boot-hardware` | Gerçek Secure Boot/eFuse gate |
 
-Proje kökünde PowerShell açıp şu komutu çalıştır:
+### Yeni lifecycle / proof track'i
+
+| No | Lab | Hedef |
+|---:|---|---|
+| 06 | [`trust-anchor-revocation`](labs/06-trust-anchor-revocation/README.md) | Trust anchor, rotation, revocation |
+| 07 | [`authenticated-container`](labs/07-authenticated-container/README.md) | Metadata + payload + policy binding |
+| 08 | [`lifecycle-close-gate`](labs/08-lifecycle-close-gate/README.md) | Authentication vs enforcement, irreversible gate |
+| 09 | [`ab-update-antirollback`](labs/09-ab-update-antirollback/README.md) | Recovery rollback vs anti-rollback |
+| 10 | [`traceability-evidence`](labs/10-traceability-evidence/README.md) | Requirement'tan evidence'a zincir |
+| 11 | [`esp32-hardware-proof`](labs/11-esp32-hardware-proof/README.md) | Gerçek cihaz proof-of-work |
+
+Host-side modeli çalıştır:
+
+```bash
+python -m security_lab.host_lab
+python -m unittest tests.test_host_lab -v
+```
+
+Model şu negatif durumları otomatik sınar: payload tamper, revoked signer, eski security version ve başarısız A/B update sonrası known-good slotun korunması.
+
+## ESP-IDF ortamı
+
+Mevcut çalışma ortamı ESP-IDF tabanlıdır. Windows'ta proje kökünde:
 
 ```powershell
 . .\scripts\Enter-EspIdf.ps1
-```
-
-Bu işlem yalnızca açık terminalin ortamını ESP-IDF için hazırlar.
-
-### 2. Ortam kontrolünü çalıştır
-
-```powershell
 .\scripts\Check-Environment.ps1
 ```
 
-Kontrolün ESP-IDF, Python, CMake, Ninja ve derleyici sürümlerini göstermesi beklenir. Kart bağlı değilse seri port kontrolünün başarısız olması normaldir.
-
-Docker ve QEMU ortamını ayrıca doğrulamak için:
-
-```powershell
-.\scripts\Check-Docker.ps1
-```
-
-### 3. İlk laboratuvara geç
-
-[`labs/00-environment`](labs/00-environment/README.md) içindeki görevleri tamamla. Komutların beklenen çıktıları bilerek verilmemiştir; önce tahmin yazılmalıdır.
-
-## Laboratuvar sırası
-
-| No | Laboratuvar | Öğrenme hedefi | Donanım riski |
-|---:|---|---|---|
-| 00 | Ortam doğrulama | Araç zinciri ve tekrar üretilebilir derleme | Yok |
-| 01 | Çip keşfi | Seri port, ROM boot logu, çip modeli ve revizyon | Çok düşük |
-| 02 | Boot zinciri | ROM, ikinci aşama bootloader, partition ve uygulama | Düşük |
-| 03 | Firmware imzalama | Hash, açık/özel anahtar ve imza doğrulama | Yok |
-| 04 | Secure Boot emülasyonu | İmzalı ve değiştirilmiş görüntü davranışları | Yok |
-| 05 | Donanım Secure Boot | eFuse, güven kökü ve gerçek boot doğrulaması | Yüksek |
-
-05 numaralı laboratuvar, önceki laboratuvarlar tamamlanmadan ve açık onay verilmeden çalıştırılmaz.
-
-Sonraki modüller mikrodenetleyici çevre birimleri, haberleşme protokolleri, FreeRTOS, güvenli OTA, PKI/mTLS, HSM/secure element ve gömülü Linux konularını kapsayacaktır.
-
-## Başarı ölçütleri
-
-Bir laboratuvar ancak aşağıdaki koşulların tamamı sağlanırsa biter:
-
-- Deney öncesi tahmin yazılmıştır.
-- Komut ve ham çıktılar kaydedilmiştir.
-- En az bir hata veya olumsuz durum incelenmiştir.
-- Sonuç kendi cümlelerinle açıklanmıştır.
-- Açıklama, kullanılan kavramlar arasındaki neden-sonuç ilişkisini içerir.
-- Kontrol sorularına notlara bakmadan cevap verilebilmiştir.
-- Tekrar görevi daha sonra yeniden yapılmıştır.
-
-Ayrıntılı değerlendirme ölçütleri [`docs/MASTERY.md`](docs/MASTERY.md) dosyasındadır.
+Kart üzerinde işlem yapmadan önce exact SoC target, chip revision, ESP-IDF version, partition table ve eFuse state kaydedilir.
 
 ## Güvenlik kuralları
 
-Secure Boot ve flash encryption deneyleri kalıcı eFuse değişiklikleri içerebilir.
+Secure Boot / Flash Encryption / eFuse deneyleri kalıcı değişiklik içerebilir.
 
-- `espefuse burn_*` içeren hiçbir komut kendiliğinden çalıştırılmaz.
-- eFuse yazmadan önce çip modeli ve revizyonu iki bağımsız yöntemle doğrulanır.
-- eFuse özeti deneyden önce kaydedilir.
-- İmzalama özel anahtarları depoya eklenmez.
-- İlk fiziksel Secure Boot deneyi üretim cihazında yapılmaz.
-- Güç ve USB bağlantısı kararlı değilse yazma işlemi başlatılmaz.
-- JTAG ve UART download mode etkileri anlaşılmadan güvenlik biti etkinleştirilmez.
+- `espefuse burn_*` benzeri komutlar otomatik çalıştırılmaz.
+- Exact çip/revision doğrulanmadan eFuse yazılmaz.
+- Before-state eFuse özeti kaydedilir.
+- Private signing key Git'e girmez.
+- Known-good signed recovery image olmadan provisioning yapılmaz.
+- Tamper/wrong-key/recovery negatif testleri önce tamamlanır.
+- Güç/USB kararsızsa irreversible işlem yapılmaz.
 
-Tam güvenlik kapısı [`docs/SAFETY.md`](docs/SAFETY.md) dosyasındadır.
+Ayrıntı: [`docs/SAFETY.md`](docs/SAFETY.md) ve [`docs/PUBLIC_SOURCE_BOUNDARY.md`](docs/PUBLIC_SOURCE_BOUNDARY.md).
+
+## Public-source boundary
+
+Public repo bilinçli olarak şunları **yeniden dağıtmaz**: staj/internal PDF'leri, notebook fotoğrafları, proprietary kaynak paketleri, private signing key'ler ve lisansı public dağıtıma izin vermeyen materyaller. Burada yayınlanan kısım öğrenme modeli, testler, açıklamalar ve public-safe proof-of-work altyapısıdır.
 
 ## Dizin yapısı
 
 ```text
-cyber-quanta-embedded-security-lab/
-├── docs/                 # Yol haritası, ustalık ve güvenlik kuralları
-├── evidence/             # Seri logları, hash'ler ve deney kanıtları
-├── labs/                 # Sıralı deneyler ve öğrenci raporları
-├── notes/                # Konulara göre düzenlenmiş teori notları
-├── scripts/              # Güvenli ortam ve doğrulama yardımcıları
-├── .gitignore            # Anahtar ve derleme ürünlerini dışarıda tutar
-└── README.md             # Laboratuvarın giriş noktası
+.
+├── labs/             ESP32 + lifecycle laboratuvarları
+├── security_lab/     vendor-neutral çalıştırılabilir host modeli
+├── tests/            host model negatif/recovery testleri
+├── docs/             safety, mastery, roadmap ve source boundary
+├── evidence/         gerçek/host proof artifact alanı
+├── scripts/          ESP-IDF ve yardımcı araçlar
+├── release/          public-safe capstone/release metadata
+└── .github/          CI ve repo workflow'ları
 ```
 
-## Sorun giderme
+## Lisans
 
-### `idf.py` bulunamıyor
-
-Önce aynı terminalde ortam betiğini çalıştır:
-
-```powershell
-. .\scripts\Enter-EspIdf.ps1
-idf.py --version
-```
-
-### Kart seri portlarda görünmüyor
-
-- USB kablosunun yalnızca şarj kablosu olmadığını kontrol et.
-- Başka bir USB portu dene.
-- Kart üzerindeki USB-UART dönüştürücünün modelini belirle.
-- Kartı çıkarıp takmadan önce ve sonra port listesini karşılaştır.
-- Rastgele sürücü kurmadan önce donanım kimliğini kaydet.
-
-### Derleme eski ayarlarla davranıyor
-
-Önce hatanın `sdkconfig` kaynaklı olup olmadığını incele. Temizlik komutlarını nedeni anlaşılmadan çalıştırma; mevcut yapılandırma deney kanıtı olabilir.
-
-### eFuse komutu isteniyor
-
-Dur. [`docs/SAFETY.md`](docs/SAFETY.md) kontrol listesi tamamlanmadan hiçbir kalıcı yazma komutu çalıştırılmaz.
+Bu public repoya eklenen özgün eğitim framework'ü ve host-side model kodu MIT lisansı altındadır. Üçüncü taraf marka, spesifikasyon ve materyaller kendi sahiplerine aittir; proprietary vendor/company source bu repoda yeniden dağıtılmaz.
