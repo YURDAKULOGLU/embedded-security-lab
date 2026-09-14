@@ -50,6 +50,7 @@ Bir komutun çalışması tek başına öğrenme kanıtı değildir. Şunları a
 - Manifest, metadata, artifact ve evidence
 - Requirement → mechanism → test → acceptance criterion → evidence traceability
 - ESP32 gerçek hardware proof-of-work akışı
+- ESP32-C3 üzerinde OTA ve Secure OTA önce/sonra karşılaştırması
 - i.MX93/AHAB ve EFR32 architecture study track'leri
 
 ## Hızlı başlangıç
@@ -77,6 +78,7 @@ Bir komutun çalışması tek başına öğrenme kanıtı değildir. Şunları a
 | 09 | [`ab-update-antirollback`](labs/09-ab-update-antirollback/README.md) | Recovery rollback vs anti-rollback |
 | 10 | [`traceability-evidence`](labs/10-traceability-evidence/README.md) | Requirement'tan evidence'a zincir |
 | 11 | [`esp32-hardware-proof`](labs/11-esp32-hardware-proof/README.md) | Gerçek cihaz proof-of-work |
+| 12 | [`ota-vs-secure-ota`](labs/12-ota-vs-secure-ota/README.md) | Güvensiz OTA saldırıları ve Secure OTA kapatmaları |
 
 Host-side modeli çalıştır:
 
