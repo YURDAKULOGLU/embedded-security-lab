@@ -1,0 +1,18 @@
+menu "Lab OTA Configuration"
+
+    config LAB_OTA_URL
+        string "Insecure HTTP OTA URL"
+        default "http://192.168.4.2:8070/untrusted_update.bin"
+        help
+            URL served only inside the isolated lab network. This profile is
+            intentionally insecure and uses HTTP without server authentication.
+
+    config LAB_OTA_START_DELAY_SECONDS
+        int "Delay before starting OTA"
+        range 1 60
+        default 5
+        help
+            Gives the serial monitor time to show the running partition and
+            the security warning before the download starts.
+
+endmenu
