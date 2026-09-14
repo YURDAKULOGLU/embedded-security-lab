@@ -20,8 +20,8 @@ Bir OTA istemcisi firmware'i düz HTTP üzerinden indirir ve image kökenini dij
 
 | Dosya | Boyut | SHA-256 |
 |---|---:|---|
-| `insecure_ota_client.bin` | 963168 bayt | `B77E7A58CB098BF6B584906EB07AD78F7B05F3B3D235D63E995B3F26AC73BA93` |
-| `untrusted_update.bin` | 141904 bayt | `89EEE92F6C78F1A2AD7E4788DE48306F22C3ED2C987BA344A4E0BF935F3666F0` |
+| `insecure_ota_client.bin` | 963168 bayt | `44F72C57A7C54640C115786048708DB247AC1E4B151356E749360234777BAEC0` |
+| `untrusted_update.bin` | 141904 bayt | `58C215CF8842307DAB82D24B26C9051C1FE94CEAFCE427BA73996CB194040A13` |
 
 Her iki kaynak ESP-IDF ile hatasız derlendi. OTA istemcisi image'ı 1.5 MB'lık en küçük uygulama bölümüne sığdı ve bölümde yaklaşık %39 boş alan kaldı.
 
@@ -35,13 +35,20 @@ Yerel HTTP sunucusu `127.0.0.1:18070` üzerinde test edildi. Sunucudan 141904 ba
 - OTA bölümleri `ota_0` adres `0x20000` ve `ota_1` adres `0x1A0000`.
 - Wi-Fi parolası ve gerçek sunucu adresi kaynak kodda değil, Git'in yok saydığı `.private/sdkconfig.defaults` içinde tutulacak.
 
-## Kanıtın sınırı
+## Donanım sonucu
 
-Bu rapor kaynakların ve iki binary'nin üretildiğini kanıtlar. Henüz kart üzerinde yetkisiz firmware'in indirildiğini veya boot edildiğini kanıtlamaz. Donanım kanıtı için seri logda sırasıyla şu işaretlerin görülmesi gerekir:
+Deney ESP32-C3 revizyon v0.4 üzerinde tamamlandı. İstemci `ota_0` bölümünden açıldı, düz HTTP üzerinden image'ı indirdi ve onu pasif `ota_1` bölümüne yazdı. Seri logda sırasıyla şu işaretler görüldü:
 
 1. `PROFILE_1_INSECURE_HTTP_OTA_CLIENT`
-2. `INSECURE_OTA_ACCEPTED_IMAGE`
-3. yeniden başlatmadan sonra `UNTRUSTED_OTA_FIRMWARE_RUNNING`
+2. `Writing to <ota_1> partition at offset 0x1a0000`
+3. `INSECURE_OTA_ACCEPTED_IMAGE`
+4. yeniden başlatmadan sonra `UNTRUSTED_OTA_FIRMWARE_RUNNING`
+
+Bootloader yeni uygulamayı `0x1a0000` adresinden yükledi. OTA sunucusu da kartın `untrusted_update.bin` için yaptığı başarılı HTTP `GET` isteğini kaydetti.
+
+Son olarak `ota_1` içinden 141904 bayt geri okundu. Geri okunan verinin SHA-256 değeri `58C215CF8842307DAB82D24B26C9051C1FE94CEAFCE427BA73996CB194040A13` çıktı ve sunulan `untrusted_update.bin` ile birebir eşleşti. Böylece yalnız log mesajı değil, flash'a yazılan gerçek baytlar da doğrulandı.
+
+Ayrıntılı deney akışı ve kanıtlar [HARDWARE_REPORT.md](HARDWARE_REPORT.md) dosyasındadır.
 
 ## Terimler
 

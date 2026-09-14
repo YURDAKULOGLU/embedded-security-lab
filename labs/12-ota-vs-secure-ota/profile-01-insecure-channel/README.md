@@ -69,11 +69,16 @@ Güvenilmeyen firmware'i yerel ağda sunmak için ikinci bir terminalde:
 
 Bu küçük HTTP sunucusu yalnızca lab bilgisayarındaki `untrusted_update.bin` dosyasını sunar. ESP32-C3 ile bilgisayar aynı izole/test Wi-Fi ağında olmalıdır.
 
-Kaynak ve derleme kanıtları [BUILD_REPORT.md](BUILD_REPORT.md) dosyasındadır.
+Kaynak ve derleme kanıtları [BUILD_REPORT.md](BUILD_REPORT.md), gerçek kart deneyi ise [HARDWARE_REPORT.md](HARDWARE_REPORT.md) dosyasındadır.
 
-## Henüz yapılmayanlar
+## Tamamlananlar
 
-- İstemci gerçek karta flashlanmadı.
-- HTTP OTA sunucusu başlatılmadı.
-- Sahte image donanım üzerinde boot edilmedi.
+- İstemci gerçek ESP32-C3 karta flashlandı.
+- Yerel HTTP OTA sunucusu çalıştırıldı ve kartın isteği kaydedildi.
+- Yetkisiz test image'ı `ota_1` bölümüne yazıldı ve oradan boot edildi.
+- `ota_1` flash içeriği geri okunarak sunulan binary ile SHA-256 seviyesinde eşleştiği doğrulandı.
+
+## Sonraki aşama
+
 - HTTPS sertifika doğrulamalı güvenli karşılık henüz eklenmedi.
+- Aynı saldırı güvenli profile karşı tekrar denenip reddedildiği kanıtlanacak.
